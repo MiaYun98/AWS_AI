@@ -10,10 +10,14 @@ from torch import nn
 from torch import optim
 import torch.nn.functional as F
 from torchvision import datasets, transforms, models
-
 from PIL import Image
 
+import json
+import argparse
 
+with open('cat_to_name.json', 'r') as f:
+    cat_to_name = json.load(f)
+    
 def load_checkpoint(filepath) : 
     checkpoint = torch.load(filepath)
     
@@ -38,6 +42,7 @@ def load_checkpoint(filepath) :
     
     return model 
 
+
 def process_image(image):
     ''' Scales, crops, and normalizes a PIL image for a PyTorch model,
         returns an Numpy array
@@ -61,27 +66,26 @@ def process_image(image):
     
     return image
 
-
-def imshow(image, ax=None, title=None):
-    """Imshow for Tensor."""
-    if ax is None:
-        fig, ax = plt.subplots()
+# def imshow(image, ax=None, title=None):
+#     """Imshow for Tensor."""
+#     if ax is None:
+#         fig, ax = plt.subplots()
     
-    # PyTorch tensors assume the color channel is the first dimension
-    # but matplotlib assumes is the third dimension
-    image = image.numpy().transpose((1, 2, 0))
+#     # PyTorch tensors assume the color channel is the first dimension
+#     # but matplotlib assumes is the third dimension
+#     image = image.numpy().transpose((1, 2, 0))
     
-    # Undo preprocessing
-    mean = np.array([0.485, 0.456, 0.406])
-    std = np.array([0.229, 0.224, 0.225])
-    image = std * image + mean
+#     # Undo preprocessing
+#     mean = np.array([0.485, 0.456, 0.406])
+#     std = np.array([0.229, 0.224, 0.225])
+#     image = std * image + mean
     
-    # Image needs to be clipped between 0 and 1 or it looks like noise when displayed
-    image = np.clip(image, 0, 1)
+#     # Image needs to be clipped between 0 and 1 or it looks like noise when displayed
+#     image = np.clip(image, 0, 1)
     
-    ax.imshow(image)
+#     ax.imshow(image)
     
-    return ax
+#     return ax
 
 def predict(image_path, model, topk=5):
     ''' Predict the class (or classes) of an image using a trained deep learning model.
@@ -111,30 +115,35 @@ def predict(image_path, model, topk=5):
     
     return probs[0].tolist(), top_classes
 
-# TODO: Display an image along with the top 5 classes
-def display(image_path): 
-    probs, classes = predict(image_path, model)
-    processed_image = process_image(image_path)
-    
-    five_names = []
 
-    for i in range(len(classes)): 
-        five_names.append(cat_to_name[str(classes[i])])
+def display(args): 
+    model = load_checkpoint(args.checkpoint)
+    probs, classes = predict(args.image_path, model)
+    processed_image = process_image(args.image_path)
+    
+    
+    top_five = 5
+    for i in range(len(probs)): 
+        print("probability: " + probs[i] + "Name: " + classes[i])
+
         
-    plt.figure(figsize = (5, 10))
-    ax = plt.subplot(2, 1, 1)
+# should define the variables comming from the terminal 
+if __name__ == '__main__': 
+    # make parser 
+    parser = argparse.ArgumentParser(description = "should catch the information for the predict folder & input" )
     
-    title = five_names[0]
-    plt.title(title)
-    imshow(processed_image, ax = ax)
+    # file path for the image 
+    parser.add_argument(dest='image_filepath') 
+    parser.add_argument(dest='checkpoint') 
     
-    plt.subplot(2, 1, 2)
-    sb.barplot(x = probs, y = five_names, color = sb.color_palette()[0])
-    plt.show()
+    # others 
+    
+    args = parser.parse_args()
+    
+    print(args.image_filepath)
+    print(args.checkpoint)
+    
+    display(args)
     
 
-
-model = load_checkpoint('checkpoint.pth')
-image_path = test_dir + '/28/image_05230.jpg'
-
-display(image_path)
+# python predict.py /flowers/test/28/image_05230.jpg checkpoint.pth
