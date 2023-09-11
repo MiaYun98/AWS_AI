@@ -1,3 +1,4 @@
+
 import matplotlib.pyplot as plt
 import seaborn as sb
 import numpy as np
@@ -53,8 +54,9 @@ def data_info(args):
         "testing" : torch.utils.data.DataLoader(image_datasets["testing"], batch_size = 16, shuffle = True)
     }    
     
-    return dataloaders['training'], dataloaders['validation']
-def train(trainloader, validloader):
+    return dataloaders['training'], dataloaders['validation'], image_datasets['training']
+
+def train(trainloader, validloader, traindataset):
     model = models.vgg16(pretrained = True)
     
     epochs = 10
@@ -121,6 +123,7 @@ def train(trainloader, validloader):
                         "Validation Loss: {:.3f} ".format(test_loss/len(validloader)),
                         "Validation Accuracy: {:.3f}".format(accuracy/len(validloader)))
                 running_loss = 0
+    save_checkpoint(model, traindataset, optimizer, classifier) 
                 
 def validation(model, validloader, criterion):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -145,6 +148,20 @@ def validation(model, validloader, criterion):
 
     return test_loss, accuracy
 
+def save_checkpoint(model, traindataset, optimizer, classifier) :
+    model.class_to_idx = traindataset.class_to_idx
+    model.cpu()
+    model_state = {
+        'epoch': 10,
+        'state_dict': model.state_dict(),
+        'optimizer_dict': optimizer.state_dict(),
+        'classifier': classifier,
+        'class_to_idx': model.class_to_idx,
+    }
+    
+    torch.save(model_state, "checkpoint.pth")
+    print("file saved")
+
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser()
     
@@ -153,7 +170,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     train_dataloaders, valid_dataloaders = data_info(args)
-    
-    print(args.data_directory)
     
     train(train_dataloaders, valid_dataloaders)
