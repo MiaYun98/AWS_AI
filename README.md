@@ -7,7 +7,9 @@ Project code for Udacity's AI Programming with Python Nanodegree program. In thi
 ## UserStory 
 
 ```md
-it should casslify the flower with top 5 higest percentage 
+AS a user who doesn't know the plants well 
+I WANT to know the name of the flowers by putting their picture and get top 5 highest percentage of the name
+SO THAT I can narrow down the choices 
 
 ```
 
