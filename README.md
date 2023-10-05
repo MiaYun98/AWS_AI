@@ -23,7 +23,7 @@ It should generate the top 5 possible flowers with the percentage chart with an 
 ## Installation 
 
 ```md
-
+Numpy, Pytorch
 ```
 
 ## Usage 
