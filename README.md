@@ -16,7 +16,8 @@ SO THAT I can narrow down the choices
 ## Acceptance Criteria
 
 ```md
-
+WHEN User puts the random flower image
+It should generate the top 5 possible flowers with the percentage chart with an image. 
 ```
 
 ## Installation 
