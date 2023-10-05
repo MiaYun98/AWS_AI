@@ -16,7 +16,7 @@ SO THAT I can narrow down the choices
 ## Acceptance Criteria
 
 ```md
-WHEN User puts the random flower image
+WHEN the User puts the random flower image
 It should generate the top 5 possible flowers with the percentage chart with an image. 
 ```
 
@@ -29,7 +29,7 @@ Numpy, Pytorch
 ## Usage 
 
 ```md
-
+To know the name of the flower with their picture. 
 ```
 
 ## APP Screen Shot 
