@@ -34,7 +34,7 @@ To know the name of the flower with their picture.
 
 ## APP Screen Shot 
 
-
+![Alt text](assets/inference_example.png)
 
 ## Credits 
 
