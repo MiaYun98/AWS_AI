@@ -38,7 +38,7 @@ To know the name of the flower with their picture.
 
 ## Credits 
 
-
+Udacity
 
 ## Deployed Application 
 
