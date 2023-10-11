@@ -40,10 +40,6 @@ To know the name of the flower with their picture.
 
 Udacity
 
-## Deployed Application 
-
-
-
 ## License 
 
 N/A
